@@ -1,0 +1,18 @@
+{
+  "name": "you-are-here",
+  "main": "./lib/you-are-here",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "you-are-here:toggle"
+  },
+  "repository": "https://github.com/atom/you-are-here",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
