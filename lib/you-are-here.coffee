@@ -12,3 +12,7 @@ module.exports = YouAreHere =
 
   toggle: ->
     console.log 'you-are-here toggled'
+    editor = atom.workspace.getActiveTextEditor()
+    range = editor.getSelectedBufferRange()
+    marker = editor.markBufferRange(range)
+    decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'you-are-here'})
