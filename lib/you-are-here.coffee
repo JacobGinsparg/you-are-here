@@ -14,25 +14,24 @@ module.exports = YouAreHere =
   toggle: ->
     console.log 'you-are-here toggled'
     editor = atom.workspace.getActiveTextEditor()
-    position = editor.getCursorBufferPosition()
-    if @alreadyMarked(editor, position)
-      @clearRange(editor, position)
+    row = editor.getCursorBufferPosition().row
+    if @alreadyMarked(editor, row)
+      @clearRange(editor, row)
     else
-      @markRange(editor, position)
+      @markRange(editor, row)
 
-  alreadyMarked: (editor, position) ->
+  alreadyMarked: (editor, row) ->
     console.log 'Already marked?'
-    (@decorations[editor.id] ? {})[position.row]
+    (@decorations[editor.id] ? {})[row]
 
-  clearRange: (editor, position) ->
+  clearRange: (editor, row) ->
     console.log 'Unmarking line'
-    decoration = @decorations[editor.id][position.row]
+    decoration = @decorations[editor.id][row]
     decoration.destroy()
-    @decorations[editor.id][position.row] = null
+    @decorations[editor.id][row] = null
 
-  markRange: (editor, position) ->
+  markRange: (editor, row) ->
     console.log 'Marking line'
-    row = position.row
     marker = editor.markBufferPosition([row, 0])
     decoration = editor.decorateMarker(marker,
       {type: 'line-number', class: 'you-are-here'})
