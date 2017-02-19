@@ -21,17 +21,14 @@ module.exports = YouAreHere =
       @markRow(editor, row)
 
   alreadyMarked: (editor, row) ->
-    console.log 'Already marked?'
-    (@decorations[editor.id] ? {})[row]
+    (@decorations[editor.id] ? {})[row] isnt null
 
   clearRow: (editor, row) ->
-    console.log 'Unmarking line'
     decoration = @decorations[editor.id][row]
     decoration.destroy()
     @decorations[editor.id][row] = null
 
   markRow: (editor, row) ->
-    console.log 'Marking line'
     marker = editor.markBufferPosition([row, 0])
     decoration = editor.decorateMarker(marker,
       {type: 'line-number', class: 'you-are-here'})
