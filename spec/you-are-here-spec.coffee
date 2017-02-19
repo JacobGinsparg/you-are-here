@@ -5,58 +5,53 @@ YouAreHere = require '../lib/you-are-here'
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
-describe "YouAreHere", ->
-  [workspaceElement, activationPromise] = []
+describe 'YouAreHere', ->
+  [workspace, editor, activationPromise] = []
 
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
+    workspace = atom.workspace
+    waitsForPromise ->
+      atom.workspace.open().then (e) ->
+        editor = e
+        YouAreHere.decorations[editor.id] = {}
     activationPromise = atom.packages.activatePackage('you-are-here')
 
-  describe "when the you-are-here:toggle event is triggered", ->
-    it "hides and shows the modal panel", ->
-      # Before the activation event the view is not on the DOM, and no panel
-      # has been created
-      expect(workspaceElement.querySelector('.you-are-here')).not.toExist()
+  describe 'Unit Tests', ->
+    describe 'YouAreHere::alreadyMarked', ->
+      it 'should be true', ->
+        YouAreHere.decorations[editor.id][0] = {'This is':'a dummy'}
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'you-are-here:toggle'
+      it 'should be false', ->
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
 
-      waitsForPromise ->
-        activationPromise
+    describe 'YouAreHere::clearRow', ->
+      it 'should destroy the decoration', ->
+        marker = editor.markBufferPosition([0,0])
+        decoration = editor.decorateMarker(marker,
+          {type: 'line-number', class: 'you-are-here'})
+        YouAreHere.decorations[editor.id][0] = decoration
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+        YouAreHere.clearRow(editor, 0)
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
 
-      runs ->
-        expect(workspaceElement.querySelector('.you-are-here')).toExist()
+    describe 'YouAreHere::markRow', ->
+      it 'should create the decoration', ->
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        YouAreHere.markRow(editor, 0)
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
 
-        youAreHereElement = workspaceElement.querySelector('.you-are-here')
-        expect(youAreHereElement).toExist()
+  describe 'Behavior Tests', ->
+    describe 'When you toggle', ->
+      it 'should mark if unmarked', ->
+        editor.setCursorBufferPosition [0,0]
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
 
-        youAreHerePanel = atom.workspace.panelForItem(youAreHereElement)
-        expect(youAreHerePanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'you-are-here:toggle'
-        expect(youAreHerePanel.isVisible()).toBe false
-
-    it "hides and shows the view", ->
-      # This test shows you an integration test testing at the view level.
-
-      # Attaching the workspaceElement to the DOM is required to allow the
-      # `toBeVisible()` matchers to work. Anything testing visibility or focus
-      # requires that the workspaceElement is on the DOM. Tests that attach the
-      # workspaceElement to the DOM are generally slower than those off DOM.
-      jasmine.attachToDOM(workspaceElement)
-
-      expect(workspaceElement.querySelector('.you-are-here')).not.toExist()
-
-      # This is an activation event, triggering it causes the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'you-are-here:toggle'
-
-      waitsForPromise ->
-        activationPromise
-
-      runs ->
-        # Now we can test for view visibility
-        youAreHereElement = workspaceElement.querySelector('.you-are-here')
-        expect(youAreHereElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'you-are-here:toggle'
-        expect(youAreHereElement).not.toBeVisible()
+      it 'should unmark if marked', ->
+        editor.setCursorBufferPosition [0,0]
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
