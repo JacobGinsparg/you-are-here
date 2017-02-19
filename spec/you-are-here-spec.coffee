@@ -6,12 +6,37 @@ YouAreHere = require '../lib/you-are-here'
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe 'YouAreHere', ->
-  [workspaceElement, activationPromise] = []
+  [workspace, editor, activationPromise] = []
 
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
+    workspace = atom.workspace
+    waitsForPromise ->
+      atom.workspace.open().then (e) ->
+        editor = e
+        YouAreHere.decorations[editor.id] = {}
     activationPromise = atom.packages.activatePackage('you-are-here')
 
-  describe 'when the you-are-here:toggle event is triggered', ->
-    it 'still has tests', ->
-      expect('tests').not.toBe('here')
+  describe 'Unit Tests', ->
+    describe 'YouAreHere::alreadyMarked', ->
+      it 'should be true', ->
+        YouAreHere.decorations[editor.id][0] = {'This is':'a dummy'}
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+
+      it 'should be false', ->
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+
+    describe 'YouAreHere::clearRow', ->
+      it 'should destroy the decoration', ->
+        marker = editor.markBufferPosition([0,0])
+        decoration = editor.decorateMarker(marker,
+          {type: 'line-number', class: 'you-are-here'})
+        YouAreHere.decorations[editor.id][0] = decoration
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+        YouAreHere.clearRow(editor, 0)
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+
+    describe 'YouAreHere::markRow', ->
+      it 'should create the decoration', ->
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        YouAreHere.markRow(editor, 0)
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
