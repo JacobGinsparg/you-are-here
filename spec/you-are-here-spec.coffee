@@ -40,3 +40,18 @@ describe 'YouAreHere', ->
         expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
         YouAreHere.markRow(editor, 0)
         expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+
+  describe 'Behavior Tests', ->
+    describe 'When you toggle', ->
+      it 'should mark if unmarked', ->
+        editor.setCursorBufferPosition [0,0]
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+
+      it 'should unmark if marked', ->
+        editor.setCursorBufferPosition [0,0]
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)

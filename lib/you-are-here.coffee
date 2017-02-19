@@ -12,7 +12,6 @@ module.exports = YouAreHere =
     @subscriptions.dispose()
 
   toggle: ->
-    console.log 'you-are-here toggled'
     editor = atom.workspace.getActiveTextEditor()
     row = editor.getCursorBufferPosition().row
     if @alreadyMarked(editor, row)
