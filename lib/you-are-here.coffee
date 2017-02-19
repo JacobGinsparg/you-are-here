@@ -16,21 +16,21 @@ module.exports = YouAreHere =
     editor = atom.workspace.getActiveTextEditor()
     row = editor.getCursorBufferPosition().row
     if @alreadyMarked(editor, row)
-      @clearRange(editor, row)
+      @clearRow(editor, row)
     else
-      @markRange(editor, row)
+      @markRow(editor, row)
 
   alreadyMarked: (editor, row) ->
     console.log 'Already marked?'
     (@decorations[editor.id] ? {})[row]
 
-  clearRange: (editor, row) ->
+  clearRow: (editor, row) ->
     console.log 'Unmarking line'
     decoration = @decorations[editor.id][row]
     decoration.destroy()
     @decorations[editor.id][row] = null
 
-  markRange: (editor, row) ->
+  markRow: (editor, row) ->
     console.log 'Marking line'
     marker = editor.markBufferPosition([row, 0])
     decoration = editor.decorateMarker(marker,
