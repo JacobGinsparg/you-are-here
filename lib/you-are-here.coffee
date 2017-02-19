@@ -21,7 +21,7 @@ module.exports = YouAreHere =
       @markRow(editor, row)
 
   alreadyMarked: (editor, row) ->
-    (@decorations[editor.id] ? {})[row] isnt null
+    (@decorations[editor.id] ? {})[row]?
 
   clearRow: (editor, row) ->
     decoration = @decorations[editor.id][row]
