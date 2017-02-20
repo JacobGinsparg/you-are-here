@@ -1,10 +1,13 @@
 {CompositeDisposable} = require 'atom'
+{$} = require 'atom-space-pen-views'
 
 module.exports = YouAreHere =
   subscriptions: null
   decorations: {}
+  mouseEvent: (e) -> YouAreHere.toggle()
 
   activate: (state) ->
+    $('.line-number').on 'mouseup', @mouseEvent
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'you-are-here:toggle': => @toggle()
 
