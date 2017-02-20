@@ -12,6 +12,7 @@ module.exports = YouAreHere =
     @subscriptions.add atom.commands.add 'atom-workspace', 'you-are-here:toggle': => @toggle()
 
   deactivate: ->
+    $('.line-number').off 'mouseup', @mouseEvent
     @subscriptions.dispose()
 
   toggle: ->
