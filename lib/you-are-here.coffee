@@ -17,7 +17,7 @@ module.exports = YouAreHere =
 
   toggle: ->
     editor = atom.workspace.getActiveTextEditor()
-    row = editor.getCursorBufferPosition().row
+    row = editor.getSelectedBufferRange().start.row
     if @alreadyMarked(editor, row)
       @clearRow(editor, row)
     else
