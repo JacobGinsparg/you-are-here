@@ -4,15 +4,16 @@
 module.exports = YouAreHere =
   subscriptions: null
   decorations: {}
-  mouseEvent: (e) -> YouAreHere.toggle()
+  mouseEvent: (e) => YouAreHere.toggle()
 
   activate: (state) ->
-    $('.line-number').on 'mouseup', @mouseEvent
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'you-are-here:toggle': => @toggle()
+    @subscriptions.add atom.packages.onDidActivateInitialPackages =>
+      $('.line-number').on 'click', @mouseEvent
 
   deactivate: ->
-    $('.line-number').off 'mouseup', @mouseEvent
+    $('.line-number').off 'click', @mouseEvent
     @subscriptions.dispose()
 
   toggle: ->

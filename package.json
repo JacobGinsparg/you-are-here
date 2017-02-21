@@ -12,9 +12,6 @@
     "marker",
     "location"
   ],
-  "activationCommands": {
-    "atom-workspace": "you-are-here:toggle"
-  },
   "repository": "https://github.com/JacobGinsparg/you-are-here",
   "license": "MIT",
   "engines": {
