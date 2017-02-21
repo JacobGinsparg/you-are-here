@@ -1,20 +1,22 @@
 {CompositeDisposable} = require 'atom'
-{$} = require 'atom-space-pen-views'
+SubAtom = require 'sub-atom'
 
 module.exports = YouAreHere =
   subscriptions: null
+  gutterSubs: null
   decorations: {}
   mouseEvent: (e) => YouAreHere.toggle()
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'you-are-here:toggle': => @toggle()
-    @subscriptions.add atom.packages.onDidActivateInitialPackages =>
-      $('.line-number').on 'click', @mouseEvent
+    @gutterSubs = new SubAtom
+    atom.packages.onDidActivateInitialPackages =>
+      @gutterSubs.add '.line-number', 'click', @mouseEvent
 
   deactivate: ->
-    $('.line-number').off 'click', @mouseEvent
     @subscriptions.dispose()
+    @gutterSubs.dispose()
 
   toggle: ->
     editor = atom.workspace.getActiveTextEditor()
