@@ -14,7 +14,8 @@ describe 'YouAreHere', ->
       atom.workspace.open().then (e) ->
         editor = e
         YouAreHere.decorations[editor.id] = {}
-    activationPromise = atom.packages.activatePackage('you-are-here')
+    waitsForPromise ->
+      activationPromise = atom.packages.activatePackage('you-are-here')
 
   describe 'Unit Tests', ->
     describe 'YouAreHere::alreadyMarked', ->
@@ -54,4 +55,25 @@ describe 'YouAreHere', ->
         YouAreHere.toggle()
         expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
         YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+
+    describe 'When the gutter is clicked', ->
+      it 'should mark if unmarked', ->
+        editorView = atom.views.getView(editor)
+        lineNumberElements = editorView.getElementsByClassName('line-number')
+        elem = lineNumberElements[0]
+        editor.setCursorBufferPosition [0,0]
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        elem.click()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+
+      it 'should unmark if marked', ->
+        editorView = atom.views.getView(editor)
+        lineNumberElements = editorView.getElementsByClassName('line-number')
+        elem = lineNumberElements[0]
+        editor.setCursorBufferPosition [0,0]
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
+        YouAreHere.toggle()
+        expect(YouAreHere.alreadyMarked(editor, 0)).toBe(true)
+        elem.click()
         expect(YouAreHere.alreadyMarked(editor, 0)).toBe(false)
