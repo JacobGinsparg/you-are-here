@@ -14,6 +14,8 @@ os:
   - linux
   - osx
 
+dist: trusty
+
 ### Generic setup follows ###
 script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
 
@@ -33,8 +35,10 @@ sudo: false
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-    - build-essential
-    - git
-    - libgnome-keyring-dev
-    - fakeroot
+      - g++-6
+      - fakeroot
+      - git
+      - libsecret-1-dev
