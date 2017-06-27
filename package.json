@@ -1,6 +1,6 @@
 {
   "name": "you-are-here",
-  "main": "./lib/you-are-here",
+  "main": "./lib/you-are-here.js",
   "version": "0.0.0",
   "description": "Place markers in Atom to find where you were",
   "author": {
