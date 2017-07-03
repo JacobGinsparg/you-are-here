@@ -12,14 +12,12 @@
     "marker",
     "location"
   ],
-  "activationCommands": {
-    "atom-workspace": "you-are-here:toggle"
-  },
   "repository": "https://github.com/JacobGinsparg/you-are-here",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
+    "sub-atom": ">=1.0.0 <2.0.0"
   }
 }
